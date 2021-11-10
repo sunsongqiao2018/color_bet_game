@@ -1,5 +1,5 @@
 # color_bet_game
-a gamble game you bet either green and red to win more chips
+a gamble game you bet on green and red to win more chips
 # Game Logic
 you can place bet on either "Red" or "Green".
 you will spend 10x chips on your bet.
