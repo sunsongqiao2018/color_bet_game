@@ -34,7 +34,9 @@ public class GameControl : MonoBehaviour
         StateMachine.Instance.GameFinished += OnGameFinished;
         //initial set ups;
         _totalChips = StateMachine.Instance.playerChipStock;
-        _betChips = 10;
+        _betChips = stackPerBet;
+        _uiControl.UpdateBetAmount(_betChips);
+        ChipsPool.Instance.GetChip();
     }
 
     private void PlayStart()
@@ -42,6 +44,7 @@ public class GameControl : MonoBehaviour
         StateMachine.Instance.SetPlayGameInitData(_playersBet, _betChips);
         _uiControl.SetTotalChips();
         StateMachine.Instance.OnPlayGame();
+        ChipsPool.Instance.RemoveAllChips();
 
         readyBtn.interactable = false;
     }
@@ -54,6 +57,7 @@ public class GameControl : MonoBehaviour
             _betChips = _totalChips;
             _uiControl.UpdateBetAmount(_betChips);
         }
+        ChipsPool.Instance.SetChips(_betChips / stackPerBet);
         readyBtn.interactable = true;
     }
     /// <summary>
@@ -67,6 +71,13 @@ public class GameControl : MonoBehaviour
         if (_betChips < 10 || _betChips > _totalChips)
         {
             _betChips -= value;
+        }
+        else
+        {
+            if (value > 0)
+                ChipsPool.Instance.GetChip();
+            else
+                ChipsPool.Instance.RemoveChip();
         }
         _uiControl.UpdateBetAmount(_betChips);
     }

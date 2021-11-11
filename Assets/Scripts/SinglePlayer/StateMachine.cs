@@ -19,7 +19,7 @@ public class StateMachine : MonoBehaviour
     public bool gameResult { private get; set; }
     public bool playerBet { private get; set; }
     public event EventHandler GameFinished;
-
+    public event EventHandler<BoolEventArgs> BroadcastResult, CardRevealed;
     //Private Fields
 
     [SerializeField] Animator cardAnim;
@@ -63,8 +63,6 @@ public class StateMachine : MonoBehaviour
         if (_currentState.GetType() == typeof(IdleGameState))
         {
             _currentState.SwitchStates(_stateFactory.Play());
-
-            cardAnim.SetBool("InPlay", true);
         }
     }
 
@@ -87,20 +85,19 @@ public class StateMachine : MonoBehaviour
 
     private IEnumerator WaitCardAnimation()
     {
-        //do some animation
-        yield return new WaitForSeconds(1f);
-
-        cardAnim.SetInteger("Result", gameResult ? 0 : 1);
+        BroadcastResult.Invoke(this, new BoolEventArgs(gameResult));
+        yield return new WaitForSeconds(.5f);
         _currentState.SwitchStates(_stateFactory.Result());
     }
     private IEnumerator WaitResultAnimation()
     {
-        //do some animation
-        yield return new WaitForSeconds(1f);
-
-        cardAnim.SetInteger("Result", -1);
+        //reveal card
+        cardAnim.SetBool("InPlay", true);
+        yield return new WaitForSeconds(2f);
+        CardRevealed.Invoke(this, new BoolEventArgs(PlayerWon()));
+        //result pop up
         cardAnim.SetBool("InPlay", false);
-
+        yield return new WaitForSeconds(2f);
         _currentState.SwitchStates(_stateFactory.Idle());
     }
 
