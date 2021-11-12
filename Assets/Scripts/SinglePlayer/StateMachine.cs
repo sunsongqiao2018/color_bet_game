@@ -32,12 +32,13 @@ public class StateMachine : MonoBehaviour
             Instance = this;
         }
 
-        //set up states
+        //load up satates
         _stateFactory = new GameStateFactory();
         //set currentState to be Idle
         _currentState = _stateFactory.Idle();
         _currentState.EnterState();
         playerChipStock = defaultStartChip;
+        playerBet = true;
     }
 
     internal void CompareResult()
@@ -64,9 +65,7 @@ public class StateMachine : MonoBehaviour
         if (_currentState.GetType() == typeof(IdleGameState))
         {
             _currentState.SwitchStates(_stateFactory.Play());
-            BroadcastPlayerInfo.Invoke(this, new PlayerInfoEventArgs(playerBet, playerChipStock));
         }
-
     }
 
     /// <summary>
@@ -85,7 +84,10 @@ public class StateMachine : MonoBehaviour
     {
         StartCoroutine(WaitCardAnimation());
     }
-
+    public void OnBroadcastingInfo()
+    {
+        BroadcastPlayerInfo?.Invoke(this, new PlayerInfoEventArgs(playerBet, playerChipStock));
+    }
     private IEnumerator WaitCardAnimation()
     {
         BroadcastResult.Invoke(this, new BoolEventArgs(gameResult));
@@ -113,9 +115,8 @@ public class StateMachine : MonoBehaviour
     {
         GameFinished.Invoke(this, new EventArgs());
     }
-    // Update is called once per frame
-    //void Update()
-    //{
-    //    // _currentState.UpdateState();
-    //}
+    private void Update()
+    {
+        _currentState.UpdateState();
+    }
 }

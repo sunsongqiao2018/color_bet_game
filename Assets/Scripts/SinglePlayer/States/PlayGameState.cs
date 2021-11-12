@@ -25,7 +25,7 @@ public class PlayGameState : BaseGameState
     }
     public override void UpdateState()
     {
-        Debug.Log("Play State");
+      //  Debug.Log("Play State");
     }
     private bool FlipCoin()
     {

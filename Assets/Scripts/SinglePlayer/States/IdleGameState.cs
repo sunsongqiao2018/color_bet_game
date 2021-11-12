@@ -15,12 +15,13 @@ public class IdleGameState : BaseGameState
     }
 
     public override void ExitState()
-    {     
+    {
         Debug.Log("Exit Idle");
     }
 
     public override void UpdateState()
     {
-        Debug.Log("you are in idle state");
+        sMachine.OnBroadcastingInfo();
+       // Debug.Log("you are in idle state");
     }
 }

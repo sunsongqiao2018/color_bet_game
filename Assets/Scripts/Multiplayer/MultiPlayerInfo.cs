@@ -16,6 +16,7 @@ public class MultiPlayerInfo : MonoBehaviourPunCallbacks, IPunObservable
     bool playerPicks;
     private void Start()
     {
+        //other player's info is tied with when the player pressed the play button, we can update it in different time but just to keep it simple here.
         StateMachine.Instance.BroadcastPlayerInfo += UpdatePlayerInfo;
     }
 
@@ -48,7 +49,6 @@ public class MultiPlayerInfo : MonoBehaviourPunCallbacks, IPunObservable
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        //AddMultiUi();
         photonView.RPC("AddMultiUi", RpcTarget.All);
     }
     public override void OnPlayerLeftRoom(Player newPlayer)
