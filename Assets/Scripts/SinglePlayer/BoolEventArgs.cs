@@ -8,3 +8,13 @@ public class BoolEventArgs : EventArgs
         value = data;
     }
 }
+public class PlayerInfoEventArgs : EventArgs
+{
+    public bool pick { get; private set; }
+    public int totalChips { get; private set; }
+    public PlayerInfoEventArgs(bool _pick, int _totalChips)
+    {
+        pick = _pick;
+        totalChips = _totalChips;
+    }
+}

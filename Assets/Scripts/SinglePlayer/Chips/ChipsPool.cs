@@ -38,7 +38,7 @@ public class ChipsPool : MonoBehaviour
     {
         if (activeChips.Count >= pooledChips.Count) StockPool(poolSize / 2);
         GameObject chip = pooledChips[activeChips.Count];
-        chip.transform.position = new Vector3(Random.Range(-1f, 1f), transform.position.y, transform.position.z);
+        chip.transform.position = new Vector3(Random.Range(-.6f, .6f), transform.position.y, transform.position.z + Random.Range(-.2f, .2f));
         chip.SetActive(true);
         activeChips.Push(chip);
     }

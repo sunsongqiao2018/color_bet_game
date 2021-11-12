@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Table
   - Chip
+  - Canvas
+  - MultiCanvas
   layers:
   - Default
   - TransparentFX

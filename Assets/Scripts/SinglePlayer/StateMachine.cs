@@ -20,6 +20,7 @@ public class StateMachine : MonoBehaviour
     public bool playerBet { private get; set; }
     public event EventHandler GameFinished;
     public event EventHandler<BoolEventArgs> BroadcastResult, CardRevealed;
+    public event EventHandler<PlayerInfoEventArgs> BroadcastPlayerInfo;
     //Private Fields
 
     [SerializeField] Animator cardAnim;
@@ -63,7 +64,9 @@ public class StateMachine : MonoBehaviour
         if (_currentState.GetType() == typeof(IdleGameState))
         {
             _currentState.SwitchStates(_stateFactory.Play());
+            BroadcastPlayerInfo.Invoke(this, new PlayerInfoEventArgs(playerBet, playerChipStock));
         }
+
     }
 
     /// <summary>
@@ -111,8 +114,8 @@ public class StateMachine : MonoBehaviour
         GameFinished.Invoke(this, new EventArgs());
     }
     // Update is called once per frame
-    void Update()
-    {
-        // _currentState.UpdateState();
-    }
+    //void Update()
+    //{
+    //    // _currentState.UpdateState();
+    //}
 }
