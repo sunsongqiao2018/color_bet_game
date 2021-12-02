@@ -4,10 +4,12 @@ using UnityEngine.UI;
 using UnityEngine;
 public class MultiUiInfo : MonoBehaviour
 {
-    public Text playerChipsTxt;
+    public TMPro.TextMeshProUGUI playerChipsTxt, playerBetAmount;
     public Image playerPickImage;
+
     private void Awake()
     {
-        transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").GetComponent<Transform>(), false);
+        //spwan the prefab to HUD gameobject.
+        transform.SetParent(GameObject.FindGameObjectWithTag("PlayerHUD").GetComponent<Transform>(), false);
     }
 }

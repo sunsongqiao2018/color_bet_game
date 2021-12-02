@@ -13,7 +13,6 @@ public class UIControl : MonoBehaviour
     [SerializeField] Image popUpPanel;
 
     TextMeshProUGUI popUpText;
-    int betChips;
     public void SetTotalChips()
     {
         _totalChips.text = StateMachine.Instance.playerChipStock.ToString();
@@ -22,7 +21,6 @@ public class UIControl : MonoBehaviour
     public void UpdateBetAmount(int amount)
     {
         _curtBetAmtText.text = amount.ToString();
-        betChips = amount;
     }
 
     private void Start()
@@ -31,14 +29,8 @@ public class UIControl : MonoBehaviour
         StateMachine.Instance.CardRevealed += ShowPopUpResult;
         SetTotalChips();
         popUpPanel.transform.localScale = Vector3.zero;
-        try
-        {
-            popUpText = popUpPanel.GetComponentInChildren<TextMeshProUGUI>();
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        popUpText = popUpPanel.GetComponentInChildren<TextMeshProUGUI>();
+        if (popUpText == null) Debug.LogWarning("popUpPanel does not have child with textmeshproUGUI attached!");
     }
 
     private void UpdateValues(object sender, EventArgs e)

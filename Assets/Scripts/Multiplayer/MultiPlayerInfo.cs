@@ -5,14 +5,15 @@ using Photon.Pun;
 using UnityEngine.UI;
 using Photon.Realtime;
 using System;
-
+using TMPro;
 [RequireComponent(typeof(PhotonView))]
 public class MultiPlayerInfo : MonoBehaviourPunCallbacks, IPunObservable
 {
     [SerializeField] GameObject multiUi;
-    Text playerTotalChipText;
+    TextMeshProUGUI playerTotalChipTxt, playerBetAmountTxt;
     Image playerPickIcon;
-    int playerChips;
+    int playerTotalChips;
+    int playerBetAmount;
     bool playerPicks;
     private void Start()
     {
@@ -24,12 +25,13 @@ public class MultiPlayerInfo : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine)
         {
-            playerChips = e.totalChips;
             playerPicks = e.pick;
+            playerTotalChips = e.totalChips;
+            playerBetAmount = e.betChips;
         }
         else
         {
-            photonView.RPC("SetPlayerValues", RpcTarget.Others, e.pick, e.totalChips);
+            photonView.RPC("SetPlayerValues", RpcTarget.Others, e.pick, e.totalChips, e.betChips);
         }
     }
 
@@ -38,12 +40,14 @@ public class MultiPlayerInfo : MonoBehaviourPunCallbacks, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(playerPicks);
-            stream.SendNext(playerChips);
+            stream.SendNext(playerTotalChips);
+            stream.SendNext(playerBetAmount);
         }
         else
         {
             playerPickIcon.color = (bool)stream.ReceiveNext() ? Color.green : Color.red;
-            playerTotalChipText.text = ((int)stream.ReceiveNext()).ToString();
+            playerTotalChipTxt.text = ((int)stream.ReceiveNext()).ToString();
+            playerBetAmountTxt.text = ((int)stream.ReceiveNext()).ToString();
         }
     }
 
@@ -61,13 +65,16 @@ public class MultiPlayerInfo : MonoBehaviourPunCallbacks, IPunObservable
     {
         GameObject ui = Instantiate(multiUi);
         MultiUiInfo uiInfo = ui.GetComponent<MultiUiInfo>();
-        playerTotalChipText = uiInfo.playerChipsTxt;
+        playerTotalChipTxt = uiInfo.playerChipsTxt;
+        playerBetAmountTxt = uiInfo.playerBetAmount;
         playerPickIcon = uiInfo.playerPickImage;
+
     }
     [PunRPC]
-    private void SetPlayerValues(bool pick, int value)
+    private void SetPlayerValues(bool pick, int total, int betValue)
     {
         playerPickIcon.color = pick ? Color.green : Color.red;
-        playerTotalChipText.text = value.ToString();
+        playerTotalChipTxt.text = total.ToString();
+        playerBetAmountTxt.text = betValue.ToString();
     }
 }

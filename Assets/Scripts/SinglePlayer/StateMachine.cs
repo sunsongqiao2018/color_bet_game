@@ -9,36 +9,37 @@ using UnityEngine;
 public class StateMachine : MonoBehaviour
 {
     private const int defaultStartChip = 100;
-
-    public static StateMachine Instance;
-    public BaseGameState _currentState { private get; set; }
     GameStateFactory _stateFactory;
 
+
+    public static StateMachine Instance;
     //Public Fields
+    public BaseGameState _currentState { private get; set; }
     public int playerBetAmount, playerChipStock;
-    public bool gameResult { private get; set; }
-    public bool playerBet { private get; set; }
-    public event EventHandler GameFinished;
+    public bool GameResult { private get; set; }
+    public bool PlayersBet { private get; set; }
+
+    public bool ResultReceived { private get; set; }
+    public event EventHandler GameFinished, GameStarted;
     public event EventHandler<BoolEventArgs> BroadcastResult, CardRevealed;
     public event EventHandler<PlayerInfoEventArgs> BroadcastPlayerInfo;
     //Private Fields
 
-    [SerializeField] Animator cardAnim;
 
+    [SerializeField] Animator cardAnim;
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
         }
-
         //load up satates
         _stateFactory = new GameStateFactory();
         //set currentState to be Idle
         _currentState = _stateFactory.Idle();
         _currentState.EnterState();
         playerChipStock = defaultStartChip;
-        playerBet = true;
+        PlayersBet = true;
     }
 
     internal void CompareResult()
@@ -61,36 +62,50 @@ public class StateMachine : MonoBehaviour
 
     public void OnPlayGame()
     {
-        //play start
+
         if (_currentState.GetType() == typeof(IdleGameState))
         {
+            //starts game if in idle state
+            ResultReceived = false;
             _currentState.SwitchStates(_stateFactory.Play());
+            GameStarted?.Invoke(this, new EventArgs());
         }
     }
 
+
     /// <summary>
-    /// 
+    /// set player bet and calculates remaining total chips
     /// </summary>
     /// <param name="bet"></param>
-    /// <param name="betAmount"></param>
-    public void SetPlayGameInitData(bool bet, int betAmount)
+    public void SetPlayGameInitData(bool bet)
     {
-        playerBet = bet;
-        playerBetAmount = betAmount;
+        SetPlayerBet(bet);
         playerChipStock -= playerBetAmount;
     }
-
+    public void SetPlayerBet(bool bet)
+    {
+        PlayersBet = bet;
+    }
+    public void SetPlayerBetAmount(int betAmount)
+    {
+        playerBetAmount = betAmount;
+    }
     internal void PlayCard()
     {
         StartCoroutine(WaitCardAnimation());
     }
-    public void OnBroadcastingInfo()
+    /// <summary>
+    /// broadcast all player hud info to other player.
+    /// </summary>
+    public void CallBroadcastPlayerInfo()
     {
-        BroadcastPlayerInfo?.Invoke(this, new PlayerInfoEventArgs(playerBet, playerChipStock));
+        BroadcastPlayerInfo?.Invoke(this, new PlayerInfoEventArgs(PlayersBet, playerChipStock, playerBetAmount));
     }
     private IEnumerator WaitCardAnimation()
     {
-        BroadcastResult.Invoke(this, new BoolEventArgs(gameResult));
+        Debug.LogWarning("BroadCasting Play Result" + (GameResult ? "true" : "false"));
+        yield return new WaitUntil(() => ResultReceived);
+        BroadcastResult.Invoke(this, new BoolEventArgs(GameResult));
         yield return new WaitForSeconds(.5f);
         _currentState.SwitchStates(_stateFactory.Result());
     }
@@ -108,7 +123,7 @@ public class StateMachine : MonoBehaviour
 
     private bool PlayerWon()
     {
-        return playerBet == gameResult;
+        return PlayersBet == GameResult;
     }
 
     internal void PlayEndCleanup()

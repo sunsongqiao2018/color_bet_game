@@ -21,7 +21,6 @@ public class IdleGameState : BaseGameState
 
     public override void UpdateState()
     {
-        sMachine.OnBroadcastingInfo();
-       // Debug.Log("you are in idle state");
+        sMachine.CallBroadcastPlayerInfo();
     }
 }

@@ -58,6 +58,7 @@ public class ChipsPool : MonoBehaviour
     }
     public void SetChips(int amount)
     {
+        RemoveAllChips();
         for (int i = 0; i < amount; i++)
         {
             GetChip();

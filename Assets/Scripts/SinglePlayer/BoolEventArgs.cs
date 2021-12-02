@@ -12,9 +12,11 @@ public class PlayerInfoEventArgs : EventArgs
 {
     public bool pick { get; private set; }
     public int totalChips { get; private set; }
-    public PlayerInfoEventArgs(bool _pick, int _totalChips)
+    public int betChips { get; private set; }
+    public PlayerInfoEventArgs(bool _pick, int _totalChips, int _betChips)
     {
         pick = _pick;
         totalChips = _totalChips;
+        betChips = _betChips;
     }
 }

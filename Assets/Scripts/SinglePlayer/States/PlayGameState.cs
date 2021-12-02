@@ -13,8 +13,8 @@ public class PlayGameState : BaseGameState
     public override void EnterState()
     {
         Debug.Log("Entered play state");
-
-        sMachine.gameResult = FlipCoin();
+        sMachine.CallBroadcastPlayerInfo();
+        //sMachine.gameResult = FlipCoin();
         sMachine.PlayCard();
     }
 
@@ -25,7 +25,6 @@ public class PlayGameState : BaseGameState
     }
     public override void UpdateState()
     {
-      //  Debug.Log("Play State");
     }
     private bool FlipCoin()
     {

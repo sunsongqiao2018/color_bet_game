@@ -41,6 +41,8 @@ MonoBehaviour:
   - RespawnSpaceship
   - AddMultiUi
   - SetPlayerValues
+  - CallPlayStart
+  - FlipCoin
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
