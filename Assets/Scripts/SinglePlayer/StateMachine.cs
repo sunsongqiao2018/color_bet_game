@@ -121,7 +121,7 @@ public class StateMachine : MonoBehaviour
         _currentState.SwitchStates(_stateFactory.Idle());
     }
 
-    private bool PlayerWon()
+    public bool PlayerWon()
     {
         return PlayersBet == GameResult;
     }

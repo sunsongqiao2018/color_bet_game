@@ -17,6 +17,8 @@ public class GameDice : MonoBehaviour, IOnEventCallback
     {
         PhotonNetwork.RemoveCallbackTarget(this);
     }
+
+    #region MASTER_CLIENT_SENDER
     public void Start()
     {
         StateMachine.Instance.GameStarted += CallFlipCoin;
@@ -44,6 +46,8 @@ public class GameDice : MonoBehaviour, IOnEventCallback
         RaiseEventOptions raiseEvtOpt = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
         PhotonNetwork.RaiseEvent(SetGameResultFromMasterClient, content, raiseEvtOpt, SendOptions.SendReliable);
     }
+    #endregion
+    #region OTHER_CLIENT_RECEIVER
     public void OnEvent(EventData photonEvent)
     {
         byte eventCode = photonEvent.Code;
@@ -55,4 +59,5 @@ public class GameDice : MonoBehaviour, IOnEventCallback
             StateMachine.Instance.ResultReceived = true;
         }
     }
+    #endregion
 }

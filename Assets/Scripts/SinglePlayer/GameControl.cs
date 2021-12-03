@@ -24,7 +24,6 @@ public class GameControl : MonoBehaviour
         increBetBtn.onClick.AddListener(() => ChangeChipBetAmount(_stackPerBet));
         decreBetBtn.onClick.AddListener(() => ChangeChipBetAmount(-_stackPerBet));
         changeBetBtn.onClick.AddListener(ToggleBet);
-        //readyBtn.onClick.AddListener(PlayStart);
 
         //hook class events
         StateMachine.Instance.GameFinished += OnGameFinished;
@@ -35,7 +34,13 @@ public class GameControl : MonoBehaviour
         _uiControl.UpdateBetAmount(_stackPerBet);
         ChipsPool.Instance.GetChip();
     }
-
+    private void OnDisable()
+    {
+        //hook class events
+        StateMachine.Instance.GameFinished -= OnGameFinished;
+        OnPlayStart -= MultiPlayGameStart;
+        OnReadyBtnPressed -= DisableUIButtons;
+    }
     private void DisableUIButtons(object sender, EventArgs e)
     {
         ToggleButtonGroups(false);

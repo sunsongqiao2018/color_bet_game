@@ -86,6 +86,5 @@ public class SyncPlayReady : MonoBehaviourPunCallbacks, IPunObservable
     }
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-
     }
 }

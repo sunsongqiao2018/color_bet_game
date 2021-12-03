@@ -38,19 +38,21 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
         PhotonNetwork.JoinRoom(rmItem.GetRoomName());
     }
-
+    public void ManualRefreshRoomList()
+    {
+        // RefreshRmList();
+    }
     public override void OnJoinedRoom()
     {
         PhotonNetwork.LoadLevel("Game");
     }
-
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         RefreshRmList(roomList);
     }
     void RefreshRmList(List<RoomInfo> rmList)
     {
-        //clear previous active rooms;
+        //refresh the room board;
         foreach (var item in activeRooms)
         {
             Destroy(item.gameObject);
@@ -61,6 +63,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             if (roominfo.PlayerCount == 0) return;
             RoomItem rItem = Instantiate(roomItemPrefab, rmListContent.transform).GetComponent<RoomItem>();
             rItem.SetRoomName(roominfo.Name);
+            activeRooms.Add(rItem);
         }
     }
 }
